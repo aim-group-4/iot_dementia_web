@@ -5,48 +5,70 @@ import io from "socket.io-client";
 const SERVER = "/"
 
 //for local testing
-//const SERVER = "http://localhost:9000"
+//const SERVER = "http://localhost:9000/"
 let count = 0
+let socket
+let sock
 function Index() {
-    let socket
-    let sock
     useEffect(async () => {
         //for deployment
-        const response = await fetch('/testAPI')
+        //const response = await fetch('/testAPI')
 
         //for local testing
         //const response = await fetch('http://localhost:9000/testAPI')
-        let res_reader = response.text()
-        console.log(await res_reader)
-        socket = io(SERVER, {
-            autoConnect: false,
-            reconnection: false,
-            transports:["websocket"],
-            auth:{token:'client'},
-            upgrade: false
-        });
-        sock = socket.connect()
-        sock.on('message', (data) => {
-            console.log("message")
-        })
-        sock.on('alert_client', (data) => {
-            console.log('alertted!')
-            console.log("device was: " + data)
-            let int_data = parseInt(data)
-            color_setter_arr[parseInt(data)-1]("red")
-            msg_setter_arr[parseInt(data)-1]("visible")
-            let time_stamp = getTimeStamp()
-            setLogText(log_text+`<div>${time_stamp} - There was a call from the ${device_alias[int_data-1]} (Device ${int_data})</div>`)
-        })
+        //let res_reader = response.text()
+        //console.log(await res_reader)
+        if(!initialized){
+            setInitialized(true)
+            console.log("sock is undefined!")
+            socket = io(SERVER, {
+                autoConnect: false,
+                reconnection: false,
+                transports:["websocket"],
+                auth:{token:'client'},
+                upgrade: false
+            });
+            sock = socket.connect()
+            sock.on('message', (data) => {
+                console.log("message")
+            })
+            sock.on('alert_client', (data) => {
+                console.log('alertted!')
+                console.log("device was: " + data)
+                let int_data = parseInt(data)
+                color_setter_arr[parseInt(data)-1]("#ae2734")
+                msg_setter_arr[parseInt(data)-1]("visible")
+                let time_stamp = getTimeStamp()
+                setLogText(log_text+`<div>${time_stamp} - There was a call from the ${device_alias[int_data-1]} (Device ${int_data})</div>`)
+            })
+            sock.on('disconnect', function(){
+                sock.disconnect()
+            })
+        }
     })
+
+    function sockAlertDevice(num){
+        let time_stamp = getTimeStamp()
+        setLogText(log_text+`<div>${time_stamp} - Alerted the device in the ${device_alias[num-1]} (Device ${num})</div>`)
+    }
+
+    function sockAlertAllDevice(num){
+        let time_stamp = getTimeStamp()
+        setLogText(log_text+`<div>${time_stamp} - Alerted all the devices</div>`)
+    }
+
     function sockAlertClient(num){
         console.log("sockAlertClient function called")
-        console.log(sock)
-        if(sock){
+        if(initialized){
             console.log("emitting...")
             sock.emit('alert_client', num)
         }
 
+    }
+
+    function resetWidget(num){
+        msg_setter_arr[num-1]("hidden")
+        color_setter_arr[num-1]("#2c3744")
     }
 
     function getTimeStamp(){
@@ -90,7 +112,7 @@ function Index() {
 
     let device_alias = ['Bedroom', 'Kitchen', 'Bathroom']
 
-    const [state1, setState1]= React.useState("Nothing yet")
+    const [initialized, setInitialized]= React.useState(false)
     const [device1_color, setD1Color] = React.useState("#2c3744")
     const [device2_color, setD2Color] = React.useState("#2c3744")
     const [device3_color, setD3Color] = React.useState("#2c3744")
@@ -154,7 +176,7 @@ function Index() {
                     <div className="body_main_icons">
                         <div className="body_main_item">
                             <div className="device_name">Bedroom</div>
-                            <div className="circle" style={{ background: device1_color }}>
+                            <div className="circle" style={{ background: device1_color }} onClick={() => {resetWidget(1)}}>
                             <span className="material-icons main_widget">
                                 bed
                             </span>
@@ -163,7 +185,7 @@ function Index() {
                         </div>
                         <div className="body_main_item">
                             <div className="device_name">Kitchen</div>
-                            <div className="circle" style={{ background: device2_color }}>
+                            <div className="circle" style={{ background: device2_color }} onClick={() => {resetWidget(2)}}>
                             <span className="material-icons main_widget">
                                 local_dining
                             </span>
@@ -172,7 +194,7 @@ function Index() {
                         </div>
                         <div className="body_main_item">
                             <div className="device_name">Bathroom</div>
-                            <div className="circle" style={{ background: device3_color }} >
+                            <div className="circle" style={{ background: device3_color }} onClick={() => {resetWidget(3)}}>
                             <span className="material-icons main_widget">
                                 wc
                             </span>
@@ -190,11 +212,24 @@ function Index() {
                         <div className="body_main_control_buttons">
                             <div className="body_main_control_title">Call</div>
                             <div className="body_main_control_box">
-                                <div className='temp'>
-                                    <p className="App-intro">{state1}</p>
-                                    <button onClick={() => {sockAlertClient(1)}}>emit1</button>
-                                    <button onClick={() => {sockAlertClient(2)}}>emit2</button>
-                                    <button onClick={() => {sockAlertClient(3)}}>emit3</button>
+                                <div className='body_main_control_box_wrap'>
+                                    <p className="">Alert all devices</p>
+                                    <div className="body_main_control_box_wrap_buttons">
+                                        <button onClick={() => {sockAlertAllDevice(1)}}>Alert All</button>
+                                    </div>
+                                    <p className="">Alert One Device</p>
+                                    <div className="body_main_control_box_wrap_buttons">
+                                        <button onClick={() => {sockAlertDevice(1)}}>Device 1</button>
+                                        <button onClick={() => {sockAlertDevice(2)}}>Device 2</button>
+                                        <button onClick={() => {sockAlertDevice(3)}}>Device 3</button>
+                                    </div>
+                                    <p>______</p>
+                                    <p className="">Test Buttons</p>
+                                    <div className="body_main_control_box_wrap_buttons">
+                                        <button onClick={() => {sockAlertClient(1)}}>Device 1</button>
+                                        <button onClick={() => {sockAlertClient(2)}}>Device 2</button>
+                                        <button onClick={() => {sockAlertClient(3)}}>Device 3</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
