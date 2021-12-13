@@ -36,8 +36,6 @@ app.get('*', (req, res) => {
 });
 
 let io = socketapi.io
-console.log(io)
-console.log(3)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

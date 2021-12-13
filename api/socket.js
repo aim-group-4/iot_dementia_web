@@ -33,9 +33,9 @@ io.on("connection", (socket) => {
             socket.broadcast.emit("device_alert", data)
         })
 
-        socket.on('client_alert', (data)=> {
+        socket.on('alert_client', (data)=> {
             console.log("server alerted")
-            socket.broadcast.emit("alert", data)
+            socket.broadcast.emit("alert_client", data)
         })
     }
     //for arduino boards

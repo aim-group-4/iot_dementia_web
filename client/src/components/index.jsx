@@ -2,20 +2,20 @@ import React, {Component, useEffect} from "react";
 import logo from "../logo.svg";
 import io from "socket.io-client";
 //for deployment
-//const SERVER = "/"
+const SERVER = "/"
 
 //for local testing
-const SERVER = "http://localhost:9000"
+//const SERVER = "http://localhost:9000"
 let count = 0
 function Index() {
     let socket
     let sock
     useEffect(async () => {
         //for deployment
-        //const response = await fetch('/testAPI')
+        const response = await fetch('/testAPI')
 
         //for local testing
-        const response = await fetch('http://localhost:9000/testAPI')
+        //const response = await fetch('http://localhost:9000/testAPI')
         let res_reader = response.text()
         console.log(await res_reader)
         socket = io(SERVER, {
@@ -29,22 +29,66 @@ function Index() {
         sock.on('message', (data) => {
             console.log("message")
         })
-
-        sock.on('device_alert', (data) => {
+        sock.on('alert_client', (data) => {
             console.log('alertted!')
             console.log("device was: " + data)
+            let int_data = parseInt(data)
             color_setter_arr[parseInt(data)-1]("red")
             msg_setter_arr[parseInt(data)-1]("visible")
+            let time_stamp = getTimeStamp()
+            setLogText(log_text+`<div>${time_stamp} - There was a call from the ${device_alias[int_data-1]} (Device ${int_data})</div>`)
         })
     })
-    function sockEmit(num){
-        console.log("sockEmit function called")
+    function sockAlertClient(num){
+        console.log("sockAlertClient function called")
         console.log(sock)
         if(sock){
             console.log("emitting...")
-            sock.emit('device_alert', num)
+            sock.emit('alert_client', num)
+        }
+
+    }
+
+    function getTimeStamp(){
+        // current timestamp in milliseconds
+        let ts = Date.now();
+        let date_ob = new Date(ts);
+        let date = date_ob.getDate();
+        let month = date_ob.getMonth() + 1;
+        let year = date_ob.getFullYear();
+        let hour = date_ob.getHours();
+        let minute = date_ob.getMinutes();
+        let second = date_ob.getSeconds();
+        let str_hour, str_minute, str_second;
+        if(hour < 10){
+            str_hour = "0" + hour
+        }
+        else{
+            str_hour = hour
+        }
+        if(minute < 10){
+            str_minute = "0" + minute
+        }
+        else{
+            str_minute = minute
+        }
+        if(second < 10){
+            str_second = "0" + second
+        }
+        else{
+            str_second = second
+        }
+        // prints date & time in YYYY-MM-DD format
+        let time_stamp = str_hour + ":" + str_minute + ":" + str_second;
+        return time_stamp
+    }
+    function sockAlertMeal(){
+        if(sock){
+            sock.emit('alert_device_meal')
         }
     }
+
+    let device_alias = ['Bedroom', 'Kitchen', 'Bathroom']
 
     const [state1, setState1]= React.useState("Nothing yet")
     const [device1_color, setD1Color] = React.useState("#2c3744")
@@ -59,11 +103,17 @@ function Index() {
 
     let msg_setter_arr = [setD1Msg, setD2Msg, setD3Msg]
 
+    let [log_text, setLogText] = React.useState("")
+
+
     function callAPI() {
+        /*
         fetch("http://localhost:9000/testAPI")
             .then(res => res.text())
             .then(res => setState1(res))
             .catch(err => err)
+
+         */
     }
     return (
         <div className="App">
@@ -133,20 +183,20 @@ function Index() {
                     <div className="body_main_control">
                         <div className="body_main_control_log">
                             <div className="body_main_control_title">Log</div>
-                            <div className="body_main_control_box">"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?""Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"</div>
+                            <div className="body_main_control_box">
+                                <div dangerouslySetInnerHTML={{__html: log_text}} />
+                            </div>
                         </div>
                         <div className="body_main_control_buttons">
                             <div className="body_main_control_title">Call</div>
                             <div className="body_main_control_box">
                                 <div className='temp'>
                                     <p className="App-intro">{state1}</p>
-                                    <button onClick={() => {sockEmit(1)}}>emit1</button>
-                                    <button onClick={() => {sockEmit(2)}}>emit2</button>
-                                    <button onClick={() => {sockEmit(3)}}>emit3</button>
+                                    <button onClick={() => {sockAlertClient(1)}}>emit1</button>
+                                    <button onClick={() => {sockAlertClient(2)}}>emit2</button>
+                                    <button onClick={() => {sockAlertClient(3)}}>emit3</button>
                                 </div>
                             </div>
-
-
                         </div>
                     </div>
                 </div>
