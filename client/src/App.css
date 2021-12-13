@@ -303,6 +303,10 @@ html{
   flex-direction: column;
 }
 
+.body_main_control_log{
+  font-family: monospace;
+}
+
 div.body_main_control_title{
   margin-bottom: 20px;
   font-size: 30px;
@@ -327,6 +331,15 @@ div.body_main_control_title{
   margin-right: 2%;
 }
 
+button{
+  /* Primary */
+  color: white;
+  background: #000000;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  margin-right: 24px;
+}
 
 .material-icons.main_widget{
   position: relative;
