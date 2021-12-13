@@ -12,39 +12,30 @@ io.on("connection", (socket) => {
     console.log(socket.handshake.auth)
     let role = socket.handshake.auth.token
     // for client (PC, mobile) devices
-    if(role == 'client'){
-        // initialize this client's sequence number
-        sequenceNumberByClient.set(socket, 1);
-        console.log(sequenceNumberByClient.size)
-        // when socket disconnects, remove it from the list:
-        socket.on("disconnect", () => {
-            sequenceNumberByClient.delete(socket);
-            /*
-            socket.removeAllListeners('send message');
-            socket.removeAllListeners('disconnect');
-            socket.removeAllListeners('connection');
+    // initialize this client's sequence number
+    sequenceNumberByClient.set(socket, 1);
+    console.log(sequenceNumberByClient.size)
+    // when socket disconnects, remove it from the list:
+    socket.on('device_alert', (data)=> {
+        console.log("server alerted")
+        socket.broadcast.emit("device_alert", data)
+    })
 
-             */
-            console.info(`Client gone [id=${socket.id}]`);
-        });
+    socket.on('alert_client', (data)=> {
+        console.log("server alerted")
+        io.emit("alert_client", data)
+    })
+    socket.on('connection', ()=>{
+        console.log("connection fired")
+    })
 
-        socket.on('device_alert', (data)=> {
-            console.log("server alerted")
-            socket.broadcast.emit("device_alert", data)
-        })
-
-        socket.on('alert_client', (data)=> {
-            console.log("server alerted")
-            socket.broadcast.emit("alert_client", data)
-        })
-    }
-    //for arduino boards
-    else if(role == 'device'){
-
-    }
-    else{
-
-    }
+    socket.on("disconnect", () => {
+        sequenceNumberByClient.delete(socket);
+        socket.removeAllListeners('send message');
+        socket.removeAllListeners('disconnect');
+        socket.removeAllListeners('connection');
+        console.info(`Client gone [id=${socket.id}]`);
+    });
 
 });
 
