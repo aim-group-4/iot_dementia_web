@@ -190,7 +190,8 @@ html{
 
   /* Auto Layout */
   position: relative;
-  display: block;
+  display: flex;
+  flex-direction: column;
 
   padding: 43px 115px;
   width: auto;
@@ -209,12 +210,7 @@ html{
   border-radius: 16px;
 
   /* Inside Auto Layout */
-
-  flex: none;
-  order: 1;
-  flex-grow: 0;
   margin: 23px 102px;
-  justify-content: space-between;
 }
 
 .body_main .body_main_icons{
@@ -225,24 +221,63 @@ html{
   position: relative;
   display: flex;
   flex-direction: row;
-  width: auto;
+
   bottom: 0%;
 
   /* Inside Auto Layout */
 
-  order: 1;
-  flex-grow: 0;
-
   justify-content: space-between;
-  margin: 0 50px 100px 100px;
+  margin: 0px 50px 0px 50px;
+  padding-right: 120px;
+  padding-left: 120px;
 }
 
+.body_main .widget_alert{
+  margin-top: 20px;
+}
 
+.device_name{
+  margin-bottom: 20px;
+}
+
+.body_main .body_main_icons_title{
+  /* _Frame Heading */
+
+
+  /* Auto Layout */
+  /* Frame Heading */
+
+
+
+  /* Heading/H1 */
+
+  font-family: Open Sans;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 48px;
+  line-height: 72px;
+  /* identical to box height, or 150% */
+  border-radius: 20px;
+
+  /* Primary */
+
+
+
+  /* Inside Auto Layout */
+
+
+  /* Neutral/50 */
+
+  background: white;
+  border: #2c3744;
+  color: #2c3744;
+  margin-bottom: 20px;
+}
 
 .body_main .circle{
   position: relative;
-  height: 300px;
-  width: 300px;
+  height: 250px;
+  width: 250px;
   background-color: #2c3744;
   border-radius: 50%;
   display: flex;
@@ -251,14 +286,51 @@ html{
 
 }
 
-.body_main_text{
-  position: relative;
 
+
+.body_main_control{
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  height: available;
 }
+
+.body_main_control > div{
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+div.body_main_control_title{
+  margin-bottom: 20px;
+  font-size: 30px;
+  font-family: "Open Sans";
+}
+
+.body_main_control .body_main_control_box{
+  position: relative;
+  /* Frame 17 */
+  /* White */
+  background: #FFFFFF;
+  /* Elevation/Shadow 3 */
+  border: #c4c4c4 1px solid;
+  box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.16);
+  border-radius: 16px;
+  padding: 20px;
+  /* Inside Auto Layout */
+  overflow: scroll;
+  height: 100%;
+  text-align: justify;
+  margin-left: 2%;
+  margin-right: 2%;
+}
+
 
 .material-icons.main_widget{
   position: relative;
-  font-size: 200px;
+  font-size: 150px;
   color: whitesmoke;
 }
 
