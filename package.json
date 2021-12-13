@@ -1,0 +1,25 @@
+{
+  "name": "iot_dementia_support",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cd api && npm install && npm start",
+    "heroku-postbuild": "cd client && npm install && npm run build"
+  },
+  "engines": {
+    "node": "17.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aim-group-4/iot_dementia_support.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aim-group-4/iot_dementia_support/issues"
+  },
+  "homepage": "https://github.com/aim-group-4/iot_dementia_support#readme"
+}
