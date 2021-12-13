@@ -1,13 +1,13 @@
 import React, {Component, useEffect} from "react";
 import logo from "../logo.svg";
 import io from "socket.io-client";
-const SERVER = "http://localhost:9000/"
+const SERVER = "/"
 let count = 0
 function Index() {
     let socket
     let sock
     useEffect(async () => {
-        const response = await fetch('http://localhost:9000/')
+        const response = await fetch('/testAPI')
         let res_reader = response.text()
         console.log(await res_reader)
         socket = io(SERVER, {
