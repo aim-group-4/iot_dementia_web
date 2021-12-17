@@ -48,6 +48,7 @@ function Index() {
     })
 
     function sockAlertDevice(num){
+        //sock.emit("alert_device", num)
         let time_stamp = getTimeStamp()
         setLogText(log_text+`<div>${time_stamp} - Alerted the device in the ${device_alias[num-1]} (Device ${num})</div>`)
     }

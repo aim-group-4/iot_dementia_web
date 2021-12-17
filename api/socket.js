@@ -28,7 +28,10 @@ io.on("connection", (socket) => {
     socket.on('connection', ()=>{
         console.log("connection fired")
     })
-
+    socket.on('alert_device', (data) => {
+        console.log('alerting all arduino devices..')
+        io.emit('alert_device', data)
+    })
     socket.on("disconnect", () => {
         sequenceNumberByClient.delete(socket);
         socket.removeAllListeners('send message');

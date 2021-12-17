@@ -193,7 +193,7 @@ html{
   display: flex;
   flex-direction: column;
 
-  padding: 43px 115px;
+  padding: 43px 4%;
   width: auto;
   height: 88%;
   top: 4%;
@@ -210,13 +210,12 @@ html{
   border-radius: 16px;
 
   /* Inside Auto Layout */
-  margin: 23px 102px;
+  margin: 23px 5%;
 }
 
 .body_main .body_main_icons{
   /* Frame 15 */
-
-
+  height: 50%;
   /* Auto Layout */
   position: relative;
   display: flex;
@@ -228,8 +227,8 @@ html{
 
   justify-content: space-between;
   margin: 0px 50px 0px 50px;
-  padding-right: 120px;
-  padding-left: 120px;
+  padding-right: 8%;
+  padding-left: 8%;
 }
 
 .body_main .widget_alert{
@@ -276,17 +275,27 @@ html{
 
 .body_main .circle{
   position: relative;
-  height: 250px;
-  width: 250px;
+  height: 70%;
+  width: 78%;
   background-color: #2c3744;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-
+  justify-self: center;
+  align-self: center;
+  overflow: hidden;
 }
 
-
+.body_main_item{
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  align-content: center;
+  justify-content: center;
+  width: 30%;
+  height: 100%;
+}
 
 .body_main_control{
   position: relative;
@@ -312,6 +321,7 @@ div.body_main_control_title{
   font-size: 30px;
   font-family: "Open Sans";
 }
+
 
 .body_main_control .body_main_control_box{
   position: relative;
@@ -343,6 +353,7 @@ button{
 
 .material-icons.main_widget{
   position: relative;
+  width: 100%;
   font-size: 150px;
   color: whitesmoke;
 }
